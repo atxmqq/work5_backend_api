@@ -9,6 +9,11 @@ import { router as alldatamovie } from "./api/searchmovie"
 
 export const app = express();
 
+app.use(
+    cors({ //api ที่สร้างอนุญาติให้เว็บนี้เข้ามาเรียกเท่านั้น
+        origin: "*",
+    })
+);
 
 app.use("/movie", movie);
 
