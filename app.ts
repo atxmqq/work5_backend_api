@@ -4,6 +4,7 @@ import { router as person } from "./api/person"
 import { router as stars } from "./api/stars"
 import { router as creators } from "./api/creators"
 import { router as alldatamovie } from "./api/searchmovie"
+import cors from "cors";
 
 
 
