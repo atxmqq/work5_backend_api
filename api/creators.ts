@@ -39,6 +39,7 @@ router.post("/insert/:movid/:perid", (req, res) => {
                 pid_cre_fk: personId
             };
 
+            
             const insertStars = 'INSERT INTO `creators`(`mid_cre_fk`, `pid_cre_fk`) VALUES (?, ?)';
             conn.query(
                 insertStars,

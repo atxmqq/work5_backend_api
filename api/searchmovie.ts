@@ -8,7 +8,7 @@ router.use(express.json());
 router.get("/", (req, res) => {
     const sql = `
         SELECT 
-            movie.*,
+            movie.*, 
             GROUP_CONCAT(DISTINCT CONCAT (person.pid, ' ', person.Name, ' ', person.Gender, ' ', person.Birth, ' ', person.img ) SEPARATOR ',') AS actors,
             GROUP_CONCAT(DISTINCT CONCAT (creators_person.pid, ' ', creators_person.Name, ' ', creators_person.Gender, ' ', creators_person.Birth, ' ', creators_person.img) SEPARATOR ',') AS creators
         FROM movie
@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
         LEFT JOIN creators ON movie.mid = creators.mid_cre_fk
         LEFT JOIN person AS creators_person ON creators.pid_cre_fk = creators_person.pid
         GROUP BY movie.mid;
-    `;
+    `; //ใช้ GROUP_CONCAT ในการรวมข้อมูลแต่ละอันเข้าด้วยกัน และ CONCAT รวมข้อมูลคอลัมน์ของแต่ละนักแสดงเข้าด้วยกัน โดยแต่ละคอลัมน์ของข้อมูลนักแสดงจะถูกเชื่อมด้วยเครื่องหมายวรรคตอน
 
     conn.query(sql, (err, result) => {
         if (err) {
@@ -36,9 +36,9 @@ router.get("/", (req, res) => {
                 Rating: row.Rating,
                 Poster: row.Poster,
                 Stars: row.actors ? row.actors.split(',').map((actor: string) => {
-                    const [pid, Name, Gender, Birth, img] = actor.split(' ');
+                    const [pid, Name, Gender, Birth, img] = actor.split(' '); //split แยกข้อความโดยการ ' ' ใช้ map เพื่อลูปช้อมูลมาแสดง
                     return { pid, Name, Gender, Birth, img };
-                }) : [],
+                }) : [],  //เช็คว่ามีข้อมูลมั้ยถ้าไม่มีเป็o ค่าว่าง
 
 
                 Creators: row.creators ? row.creators.split(',').map((creator: string) => {
@@ -68,11 +68,11 @@ router.get("/search", (req, res) => {
         LEFT JOIN creators ON movie.mid = creators.mid_cre_fk
         LEFT JOIN person AS creators_person ON creators.pid_cre_fk = creators_person.pid
         WHERE
-            movie.Title LIKE ?
+            movie.Title LIKE ? 
         GROUP BY movie.mid;
-    `;
+    `; // LIKE ? ทำให้ค้นหาข้อมูลโดย % ได้
 
-    const searchTitle = `%${searchmovie}%`;
+    const searchTitle = `%${searchmovie}%`; //ค้นหาข้อมูลจากส่วนไหนก็ได้
 
 
     conn.query(sql, [searchTitle], (err, result) => {
